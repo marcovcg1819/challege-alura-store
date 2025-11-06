@@ -4,6 +4,7 @@ import matplotlib.ticker as ticker
 import folium
 from folium.plugins import HeatMap
 
+#urls de los datos
 url = "https://raw.githubusercontent.com/alura-es-cursos/challenge1-data-science-latam/refs/heads/main/base-de-datos-challenge1-latam/tienda_1%20.csv"
 url2 = "https://raw.githubusercontent.com/alura-es-cursos/challenge1-data-science-latam/refs/heads/main/base-de-datos-challenge1-latam/tienda_2.csv"
 url3 = "https://raw.githubusercontent.com/alura-es-cursos/challenge1-data-science-latam/refs/heads/main/base-de-datos-challenge1-latam/tienda_3.csv"
@@ -18,6 +19,7 @@ print(tienda.head())
 
 print(tienda.iloc[100])
 
+#calculando sumas de ventas por tienda
 sum1 = tienda['Precio'].sum()
 sum2 = tienda2['Precio'].sum()
 sum3 = tienda3['Precio'].sum()
@@ -72,7 +74,6 @@ fig.savefig('grafico_ventas.png', bbox_inches='tight')
 #plt.show()
 
 #Venta por categoria de cada tienda
-#Venta por categoria de cada tienda
 def calcular_y_guardar_ventas_por_categoria(data: pd.DataFrame, nombre_archivo_salida: str, nombre_tienda: str):    
     # ... (Verificación de columnas y cálculo omitidos por brevedad) ...
     if 'Categoría del Producto' not in data.columns or 'Precio' not in data.columns:
@@ -99,7 +100,7 @@ def calcular_y_guardar_ventas_por_categoria(data: pd.DataFrame, nombre_archivo_s
            # o, si usamos el plot de pandas, nos aseguramos de no pasarle labels=...
         )
 
-        # ⭐️ PASO CLAVE: Agregar la leyenda
+        #Leyenda
         ax.legend(
             wedges, # Los objetos de las porciones
             ventas_por_categoria.index, # Los nombres de las categorías (el índice)
@@ -178,14 +179,12 @@ producto_mas_y_menos_vendido(tienda4,'Tienda 4')
 
 #Valor envio promedio
 
-import pandas as pd
-
 def calcular_envio_promedio(data: pd.DataFrame, nombre_tienda: str, columna_envio: str = 'Costo de envío'):
     
     
     # 1. Verificar si la columna de envío existe
     if columna_envio not in data.columns:
-        print(f"❌ Error: El DataFrame de {nombre_tienda} no tiene la columna '{columna_envio}'.")
+        print(f"Error: El DataFrame de {nombre_tienda} no tiene la columna '{columna_envio}'.")
         return None
 
     # 2. Calcular el promedio y redondear
@@ -197,7 +196,7 @@ def calcular_envio_promedio(data: pd.DataFrame, nombre_tienda: str, columna_envi
         return promedio_envio
         
     except TypeError:
-        print(f"❌ Error de cálculo: La columna '{columna_envio}' debe contener solo valores numéricos en {nombre_tienda}.")
+        print(f"Error de cálculo: La columna '{columna_envio}' debe contener solo valores numéricos en {nombre_tienda}.")
         return None
 
 
@@ -213,31 +212,17 @@ from folium.plugins import HeatMap
 import pandas as pd
 
 def generar_mapa_calor_ventas(data: pd.DataFrame, nombre_tienda: str, nombre_archivo: str):
-    """
-    Genera un mapa de calor de ventas para una tienda específica.
-
-    Args:
-        data (pd.DataFrame): DataFrame de la tienda (debe tener Latitud, Longitud, Precio).
-        nombre_tienda (str): Nombre de la tienda para el título.
-        nombre_archivo (str): Nombre del archivo HTML de salida.
-    """
     
-    # 1. Preparar y limpiar los datos
-    # Seleccionamos las columnas, convertimos a lista de listas. 
-    # Usamos Precio como la intensidad (peso) del calor.
-    
-    # Asegúrate de que las columnas existan y no tengan valores nulos o no numéricos
     data_mapa = data.dropna(subset=['lat', 'lon', 'Precio'])
     
     # Formato de datos requerido por HeatMap: [[lat, lon, peso], ...]
     datos_calor = data_mapa[['lat', 'lon', 'Precio']].values.tolist()
     
     if not datos_calor:
-        print(f"❌ Advertencia: No hay datos válidos de latitud, longitud o precio en {nombre_tienda}.")
+        print(f" Advertencia: No hay datos válidos de latitud, longitud o precio en {nombre_tienda}.")
         return
 
-    # 2. Inicializar el mapa
-    # Usar el promedio de lat/lon de la tienda para centrar el mapa
+    #Inicializar el mapa
     lat_centro = data_mapa['lat'].mean()
     lon_centro = data_mapa['lon'].mean()
     
@@ -264,13 +249,12 @@ def generar_mapa_calor_ventas(data: pd.DataFrame, nombre_tienda: str, nombre_arc
 
     try:
         m.save(nombre_archivo)
-        print(f"✅ Mapa de calor de {nombre_tienda} guardado en: **{nombre_archivo}**")
+        print(f" Mapa de calor de {nombre_tienda} guardado en: **{nombre_archivo}**")
     except Exception as e:
-        print(f"❌ Error al guardar el mapa de {nombre_tienda}: {e}")
+        print(f" Error al guardar el mapa de {nombre_tienda}: {e}")
 
 # --- EJECUCIÓN PARA TODAS LAS TIENDAS ---
 
-# ⚠️ Asegúrate que tus DataFrames estén cargados y nombrados correctamente (tienda1, tienda2, etc.)
 tiendas_data = {
     'Tienda 1': tienda,
     'Tienda 2': tienda2,
