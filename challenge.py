@@ -1,6 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+import folium
+from folium.plugins import HeatMap
 
 url = "https://raw.githubusercontent.com/alura-es-cursos/challenge1-data-science-latam/refs/heads/main/base-de-datos-challenge1-latam/tienda_1%20.csv"
 url2 = "https://raw.githubusercontent.com/alura-es-cursos/challenge1-data-science-latam/refs/heads/main/base-de-datos-challenge1-latam/tienda_2.csv"
@@ -205,3 +207,77 @@ calcular_envio_promedio(tienda3, 'Tienda 3', 'Costo de envío')
 calcular_envio_promedio(tienda4, 'Tienda 4', 'Costo de envío')
 
 
+
+import folium
+from folium.plugins import HeatMap
+import pandas as pd
+
+def generar_mapa_calor_ventas(data: pd.DataFrame, nombre_tienda: str, nombre_archivo: str):
+    """
+    Genera un mapa de calor de ventas para una tienda específica.
+
+    Args:
+        data (pd.DataFrame): DataFrame de la tienda (debe tener Latitud, Longitud, Precio).
+        nombre_tienda (str): Nombre de la tienda para el título.
+        nombre_archivo (str): Nombre del archivo HTML de salida.
+    """
+    
+    # 1. Preparar y limpiar los datos
+    # Seleccionamos las columnas, convertimos a lista de listas. 
+    # Usamos Precio como la intensidad (peso) del calor.
+    
+    # Asegúrate de que las columnas existan y no tengan valores nulos o no numéricos
+    data_mapa = data.dropna(subset=['lat', 'lon', 'Precio'])
+    
+    # Formato de datos requerido por HeatMap: [[lat, lon, peso], ...]
+    datos_calor = data_mapa[['lat', 'lon', 'Precio']].values.tolist()
+    
+    if not datos_calor:
+        print(f"❌ Advertencia: No hay datos válidos de latitud, longitud o precio en {nombre_tienda}.")
+        return
+
+    # 2. Inicializar el mapa
+    # Usar el promedio de lat/lon de la tienda para centrar el mapa
+    lat_centro = data_mapa['lat'].mean()
+    lon_centro = data_mapa['lon'].mean()
+    
+    m = folium.Map(
+        location=[lat_centro, lon_centro], 
+        zoom_start=4.5,  # Ajusta el zoom inicial
+        tiles='CartoDB Positron' # Estilo de mapa que resalta los datos
+    )
+
+    # 3. Agregar la capa HeatMap
+    HeatMap(
+        datos_calor, 
+        name='Mapa de Calor de Ventas',
+        radius=15,          # Radio de influencia del punto de calor
+        max_val=data_mapa['Precio'].max(), # Valor máximo de coloración
+        min_opacity=0.5
+    ).add_to(m)
+
+    # 4. Agregar título y guardar
+    title_html = f'''
+                 <h3 align="center" style="font-size:16px"><b>Mapa de Calor de Ventas - {nombre_tienda}</b></h3>
+                 '''
+    m.get_root().html.add_child(folium.Element(title_html))
+
+    try:
+        m.save(nombre_archivo)
+        print(f"✅ Mapa de calor de {nombre_tienda} guardado en: **{nombre_archivo}**")
+    except Exception as e:
+        print(f"❌ Error al guardar el mapa de {nombre_tienda}: {e}")
+
+# --- EJECUCIÓN PARA TODAS LAS TIENDAS ---
+
+# ⚠️ Asegúrate que tus DataFrames estén cargados y nombrados correctamente (tienda1, tienda2, etc.)
+tiendas_data = {
+    'Tienda 1': tienda,
+    'Tienda 2': tienda2,
+    'Tienda 3': tienda3,
+    'Tienda 4': tienda4
+}
+
+for nombre, data_frame in tiendas_data.items():
+    archivo_salida = f'heatmap_{nombre.replace(" ", "_").lower()}.html'
+    generar_mapa_calor_ventas(data_frame, nombre, archivo_salida)
