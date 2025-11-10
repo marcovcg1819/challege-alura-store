@@ -1,8 +1,10 @@
 ### Challenge Alura Store, ORACLE ONE - Alura LATAM
 
+## Descripción del proyecto
+
 ### El presente challenge tiene como objetivo, ayudar a decidir al señor Juan, cuál tienda debe vender, para ayudarlo a invertir en un 
-nuevo negocio, para ello, se va a evaluar cuál de sus 4 tiendas tiene un menor 
-desempeño, los aspectos en los que se basará el análisis son los siguientes:
+### nuevo negocio, para ello, se va a evaluar cuál de sus 4 tiendas tiene un menor 
+### desempeño, los aspectos en los que se basará el análisis son los siguientes:
 
 1	Facturación total de cada tienda
 2	Categorías má populares
@@ -12,7 +14,7 @@ desempeño, los aspectos en los que se basará el análisis son los siguientes:
 
 - ¡Extra! Análisis del desempeño geográfico
 
-## Descripción del proyecto
+## Descripción técnica del proyecto
 
 <p align="justify">
 El proyecto es un Challenge que utiliza python y librerias como pandas (para tratamiento de datos), 
