@@ -24,7 +24,7 @@ matplotlib (para creacion de graficos), y folium (para creacion de graficos heat
 para crear un analisis del desemepeño geográfico.
 </p>
 
-## Puesta en funcion
+## Puesta en función
 
 - en el termina digite el siguiente comando: git clone https://github.com/marcovcg1819/challege-alura-store.git
 
