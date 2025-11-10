@@ -2,9 +2,11 @@
 
 ## Descripción del proyecto
 
+<p align="justify">
 ### El presente challenge tiene como objetivo, ayudar a decidir al señor Juan, cuál tienda debe vender, para ayudarlo a invertir en un 
-### nuevo negocio, para ello, se va a evaluar cuál de sus 4 tiendas tiene un menor 
-### desempeño, los aspectos en los que se basará el análisis son los siguientes:
+nuevo negocio, para ello, se va a evaluar cuál de sus 4 tiendas tiene un menor 
+desempeño, los aspectos en los que se basará el análisis son los siguientes:
+</p>
 
 1	Facturación total de cada tienda
 2	Categorías má populares
